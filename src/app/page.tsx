@@ -1,4 +1,5 @@
 import { Suspense } from "react";
+import Tweets from "./tweets";
 
 // import Tweets from "./tweets";
 
@@ -8,7 +9,10 @@ const Feed = async () => {
     <div className="flex h-full w-full grow flex-col border-l border-r border-zinc-700 md:w-[600px]">
       {/* {self && <CreatePostWizard self={self} />} */}
       {/* {!self && <SignIn />} */}
-      <Suspense fallback={<div>Loading...</div>}>{/* <Tweets /> */}</Suspense>
+      <Suspense fallback={<div>Loading...</div>}>
+        {/* @ts-expect-error Server Component */}
+        <Tweets />
+      </Suspense>
     </div>
   );
 };

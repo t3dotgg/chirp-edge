@@ -1,16 +1,17 @@
 import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
+import { dbconnection } from "./utils/db";
 dayjs.extend(relativeTime);
 
-export const TweetView = (props: {
-  tweet: {
-    createdAt: string;
-    content: string;
-    id: string;
-    user: { profileImageUrl: string; username: string };
-  };
-}) => {
+type TweetType = {
+  createdAt: string;
+  content: string;
+  id: string;
+  user: { profileImageUrl: string; username: string };
+};
+
+export const TweetView = (props: { tweet: TweetType }) => {
   return (
     <div className="border-t border-zinc-700 p-4 shadow-lg">
       <Link href={`/post/${props.tweet.id}`}>
@@ -35,13 +36,27 @@ export const TweetView = (props: {
   );
 };
 
-export default function Tweets() {
-  const data = [] as any[];
+export default async function Tweets() {
+  const { rows } = await dbconnection.execute(
+    "SELECT * FROM `emoji-twitter`.`Post` WHERE 1=1 ORDER BY `emoji-twitter`.`Post`.`createdAt` DESC"
+  );
+
+  const data = rows as TweetType[];
 
   return (
     <>
-      {data?.map((post) => (
-        <TweetView key={post.id} tweet={post} />
+      {data.map((post) => (
+        <TweetView
+          key={post.id}
+          tweet={{
+            ...post,
+            user: {
+              profileImageUrl:
+                "https://images.clerk.dev/oauth_github/img_2MLjBpO7qo5bS6be8EtgQfj8Iir.png",
+              username: "theo",
+            },
+          }}
+        />
       ))}
     </>
   );
