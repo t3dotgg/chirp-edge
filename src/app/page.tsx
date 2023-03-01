@@ -1,6 +1,8 @@
 import { Suspense } from "react";
 import Tweets from "./tweets";
 
+export const dynamic = "force-dynamic";
+
 // import Tweets from "./tweets";
 
 const Feed = async () => {
