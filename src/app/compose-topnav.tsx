@@ -1,5 +1,4 @@
-import { currentUser } from "@clerk/nextjs/app-beta";
-import { use, useState } from "react";
+import { currentUser, SignIn } from "@clerk/nextjs/app-beta";
 
 export const CreatePostWizard = async () => {
   //   const [content, setContent] = useState("");
@@ -9,6 +8,10 @@ export const CreatePostWizard = async () => {
   const setContent = (i: string) => null;
 
   const user = await currentUser();
+
+  if (!user) {
+    return <SignIn />;
+  }
 
   return (
     <div className="relative flex w-full">
