@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs/app-beta";
 import "./globals.css";
 
 export const metadata = {
@@ -12,11 +13,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>
-        <main className="flex min-h-screen flex-col items-center bg-black text-white">
-          {children}
-        </main>
-      </body>
+      <ClerkProvider>
+        <body>
+          <main className="flex min-h-screen flex-col items-center bg-black text-white">
+            {children}
+          </main>
+        </body>
+      </ClerkProvider>
     </html>
   );
 }

@@ -2,16 +2,19 @@ import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { dbconnection } from "./utils/db";
+import { CreatePostWizard } from "./compose-topnav";
+import { clerkClient } from "@clerk/nextjs/app-beta";
+import type { User } from "@clerk/nextjs/dist/api";
 dayjs.extend(relativeTime);
 
 type TweetType = {
   createdAt: string;
   content: string;
   id: string;
-  user: { profileImageUrl: string; username: string };
+  authorId: string;
 };
 
-export const TweetView = (props: { tweet: TweetType }) => {
+export const TweetView = (props: { tweet: TweetType & { user: User } }) => {
   return (
     <div className="border-t border-zinc-700 p-4 shadow-lg">
       {/* <Link href={`/post/${props.tweet.id}`}> */}
@@ -42,19 +45,23 @@ export default async function Tweets() {
   );
 
   const data = rows as TweetType[];
+  const userIds = data.map((post) => post.authorId);
+  const users = await clerkClient.users.getUserList({ userId: userIds });
+
+  const posts = data.map((post) => ({
+    ...post,
+    user: users.find((user) => user.id === post.authorId)!,
+  }));
 
   return (
     <>
-      {data.map((post) => (
+      {/* @ts-expect-error Server Component */}
+      <CreatePostWizard />
+      {posts.map((post) => (
         <TweetView
           key={post.id}
           tweet={{
             ...post,
-            user: {
-              profileImageUrl:
-                "https://images.clerk.dev/oauth_github/img_2MLjBpO7qo5bS6be8EtgQfj8Iir.png",
-              username: "theo",
-            },
           }}
         />
       ))}

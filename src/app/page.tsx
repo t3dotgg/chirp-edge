@@ -3,8 +3,6 @@ import Tweets from "./tweets";
 
 export const dynamic = "force-dynamic";
 
-// import Tweets from "./tweets";
-
 const Feed = async () => {
   // const self = await currentUser();
   return (
