@@ -3,7 +3,6 @@ import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { dbconnection } from "./utils/db";
 import { CreatePostWizard } from "./compose-topnav";
-import { clerkClient } from "@clerk/nextjs/app-beta";
 dayjs.extend(relativeTime);
 
 type User = { username: string; profileImageUrl: string; id: string };
