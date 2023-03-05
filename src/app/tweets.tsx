@@ -4,8 +4,9 @@ import relativeTime from "dayjs/plugin/relativeTime";
 import { dbconnection } from "./utils/db";
 import { CreatePostWizard } from "./compose-topnav";
 import { clerkClient } from "@clerk/nextjs/app-beta";
-import type { User } from "@clerk/nextjs/dist/api";
 dayjs.extend(relativeTime);
+
+type User = { username: string; profileImageUrl: string; id: string };
 
 type TweetType = {
   createdAt: string;
@@ -39,14 +40,28 @@ export const TweetView = (props: { tweet: TweetType & { user: User } }) => {
   );
 };
 
+import { headers } from "next/headers";
+
 export default async function Tweets() {
   const { rows } = await dbconnection.execute(
     "SELECT * FROM `emoji-twitter`.`Post` WHERE 1=1 ORDER BY `emoji-twitter`.`Post`.`createdAt` DESC"
   );
 
+  const hs = headers();
+
+  console.log("headers", hs);
+
+  const ref = hs.get("referer");
+
+  if (!ref) {
+    throw new Error("no referer");
+  }
+
   const data = rows as TweetType[];
   const userIds = data.map((post) => post.authorId);
-  const users = await clerkClient.users.getUserList({ userId: userIds });
+  const users: User[] = await fetch(`${ref}/api/users`).then((res) =>
+    res.json()
+  );
 
   const posts = data.map((post) => ({
     ...post,
