@@ -36,7 +36,6 @@ export const TweetView = (props: { tweet: TweetType & { user: User } }) => {
   );
 };
 
-import { headers } from "next/headers";
 import { clerkClient } from "@clerk/nextjs/server";
 import { User } from "@clerk/nextjs/dist/api";
 
@@ -44,14 +43,6 @@ export default async function Tweets() {
   const { rows } = await dbconnection.execute(
     "SELECT * FROM `emoji-twitter`.`Post` WHERE 1=1 ORDER BY `emoji-twitter`.`Post`.`createdAt` DESC"
   );
-
-  const hs = headers();
-
-  const ref = hs.get("referer");
-
-  if (!ref) {
-    throw new Error("no referer");
-  }
 
   const data = rows as TweetType[];
   const userIds = data.map((post) => post.authorId);
