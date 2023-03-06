@@ -1,11 +1,8 @@
-import Link from "next/link";
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { dbconnection } from "./utils/db";
 import { CreatePostWizard } from "./compose-topnav";
 dayjs.extend(relativeTime);
-
-type User = { username: string; profileImageUrl: string; id: string };
 
 type TweetType = {
   createdAt: string;
@@ -40,6 +37,8 @@ export const TweetView = (props: { tweet: TweetType & { user: User } }) => {
 };
 
 import { headers } from "next/headers";
+import { clerkClient } from "@clerk/nextjs/server";
+import { User } from "@clerk/nextjs/dist/api";
 
 export default async function Tweets() {
   const { rows } = await dbconnection.execute(
@@ -56,9 +55,7 @@ export default async function Tweets() {
 
   const data = rows as TweetType[];
   const userIds = data.map((post) => post.authorId);
-  const users: User[] = await fetch(`${ref}/api/users`).then((res) =>
-    res.json()
-  );
+  const users = await clerkClient.users.getUserList({ userId: userIds });
 
   const posts = data.map((post) => ({
     ...post,
