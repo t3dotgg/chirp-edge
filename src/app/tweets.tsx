@@ -48,8 +48,6 @@ export default async function Tweets() {
 
   const hs = headers();
 
-  console.log("headers", hs);
-
   const ref = hs.get("referer");
 
   if (!ref) {
