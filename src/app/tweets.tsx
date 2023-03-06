@@ -1,7 +1,6 @@
 import dayjs from "dayjs";
 import relativeTime from "dayjs/plugin/relativeTime";
 import { dbconnection } from "./utils/db";
-import { CreatePostWizard } from "./compose-topnav";
 dayjs.extend(relativeTime);
 
 type TweetType = {
@@ -55,8 +54,6 @@ export default async function Tweets() {
 
   return (
     <>
-      {/* @ts-expect-error Server Component */}
-      <CreatePostWizard />
       {posts.map((post) => (
         <TweetView
           key={post.id}
