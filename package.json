@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@clerk/nextjs": "^4.11.4-staging.0",
     "@planetscale/database": "^1.5.0",
     "@types/node": "18.14.2",
     "@types/react": "18.0.28",
