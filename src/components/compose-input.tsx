@@ -5,7 +5,7 @@ import classNames from "classnames";
 // Some bloom-filter thing is failing to resolve buffer
 import { useRouter } from "next/navigation";
 
-import { useState } from "react";
+import { useState, useTransition } from "react";
 
 import useSWRMutation from "swr/mutation";
 
@@ -27,18 +27,23 @@ export const CreatePostInput = () => {
   const [content, setContent] = useState("");
 
   const router = useRouter();
-  const { trigger, isMutating } = useSWRMutation("/api/post", createPost, {
-    onSuccess: (data) => {
-      setContent("");
-      router.refresh();
-    },
-  });
+
+  const { trigger, isMutating, data } = useSWRMutation(
+    "/api/post",
+    createPost,
+    {
+      onSuccess: (data) => {
+        router.refresh();
+        setContent("");
+      },
+    }
+  );
 
   return (
     <input
       value={content}
       onChange={(e) => setContent(e.target.value)}
-      disabled={isMutating}
+      disabled={isMutating || !!data}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
           trigger(content);
@@ -46,16 +51,10 @@ export const CreatePostInput = () => {
       }}
       className={classNames(
         "my-4 grow bg-transparent py-4 pr-20 text-xl outline-none",
-        { "opacity-40": isMutating }
+        { "opacity-80": isMutating }
       )}
       placeholder="Type some emojis"
       autoFocus
     />
   );
-
-  //   return (
-  //     <div className="absolute right-2 flex h-full flex-col justify-center">
-  //       {!!content && <button onClick={() => null}>POST!</button>}
-  //     </div>
-  //   );
 };
