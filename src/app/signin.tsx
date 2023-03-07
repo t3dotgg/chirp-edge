@@ -1,6 +1,5 @@
 "use client";
 
-// Importing anything from @clerk/nextjs on client appears to break edge due to buffer calls
 import { useClerk } from "@clerk/nextjs/app-beta/client";
 
 export const CustomSignIn = () => {
