@@ -1,5 +1,6 @@
 import { currentUser, SignIn } from "@clerk/nextjs/app-beta";
 import { Suspense } from "react";
+import { LoadingPage } from "~/components/loading";
 import { CreatePostWizard } from "./compose-topnav";
 import { CustomSignIn } from "./signin";
 import Tweets from "./tweets";
@@ -13,7 +14,7 @@ const Feed = async () => {
       {/* @ts-expect-error Server Component */}
       {self && <CreatePostWizard self={self} />}
       {!self && <CustomSignIn />}
-      <Suspense fallback={<div>Loading...</div>}>
+      <Suspense fallback={<LoadingPage />}>
         {/* @ts-expect-error Server Component */}
         <Tweets />
       </Suspense>
