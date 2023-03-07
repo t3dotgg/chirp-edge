@@ -24,7 +24,7 @@ export const TweetView = (props: { tweet: TweetType & { user: User } }) => {
           <div className="text-base font-bold text-slate-300">
             <span>{`@${props.tweet.user.username}`}</span>
             <span className="font-thin">{` · ${dayjs(
-              props.tweet.createdAt
+              props.tweet.createdAt + " GMT"
             ).fromNow()}`}</span>
           </div>
           <div className="text-slate-300">{props.tweet.content}</div>
@@ -44,6 +44,7 @@ export default async function Tweets() {
   );
 
   const data = rows as TweetType[];
+  console.log(data);
   const userIds = data.map((post) => post.authorId);
   const users = await clerkClient.users.getUserList({ userId: userIds });
 
