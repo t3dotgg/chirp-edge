@@ -40,7 +40,7 @@ import { User } from "@clerk/nextjs/dist/api";
 
 export default async function Tweets() {
   const { rows } = await dbconnection.execute(
-    "SELECT * FROM `emoji-twitter`.`Post` WHERE 1=1 ORDER BY `emoji-twitter`.`Post`.`createdAt` DESC"
+    "SELECT * FROM `emoji-twitter`.`Post` WHERE 1=1 ORDER BY `emoji-twitter`.`Post`.`createdAt` DESC LIMIT 100"
   );
 
   const data = rows as TweetType[];
