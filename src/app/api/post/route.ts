@@ -11,10 +11,7 @@ const PostSchema = z.object({
 });
 
 export async function POST(request: Request) {
-  console.log("req", request);
   const user = getAuth(request as any);
-
-  console.log("auth?", user);
 
   const userId = user.userId;
 
@@ -40,7 +37,7 @@ export async function POST(request: Request) {
       [cuid2.createId(), mysqlDate, content, true, userId]
     );
 
-    console.log("success?", insert);
+    console.log("successfully inserted new post", insert);
 
     return new NextResponse("success!");
   } catch (e) {

@@ -26,32 +26,35 @@ async function createPost(url: string, { arg }: { arg: string }) {
 export const CreatePostInput = () => {
   const [content, setContent] = useState("");
 
+  const [transitioning, startTransitioning] = useTransition();
+
   const router = useRouter();
 
-  const { trigger, isMutating, data } = useSWRMutation(
-    "/api/post",
-    createPost,
-    {
-      onSuccess: (data) => {
-        router.refresh();
-        setContent("");
-      },
-    }
-  );
+  const { trigger, isMutating, data } = useSWRMutation("/api/post", createPost);
+
+  const triggerWithTransition = async () => {
+    await trigger(content);
+    startTransitioning(() => {
+      router.refresh();
+      setContent("");
+    });
+  };
+
+  const disabled = isMutating || transitioning;
 
   return (
     <input
       value={content}
       onChange={(e) => setContent(e.target.value)}
-      disabled={isMutating || !!data}
+      disabled={disabled}
       onKeyDown={(e) => {
         if (e.key === "Enter") {
-          trigger(content);
+          triggerWithTransition();
         }
       }}
       className={classNames(
         "my-4 grow bg-transparent py-4 pr-20 text-xl outline-none",
-        { "opacity-80": isMutating }
+        { "opacity-80": disabled }
       )}
       placeholder="Type some emojis"
       autoFocus
