@@ -46,7 +46,10 @@ export default async function Tweets() {
   const data = rows as TweetType[];
   console.log(data);
   const userIds = data.map((post) => post.authorId);
-  const users = await clerkClient.users.getUserList({ userIds, limit: 100 });
+  const users = await clerkClient.users.getUserList({
+    userId: userIds,
+    limit: 100,
+  });
 
   users.forEach((u) => console.log(u.username));
 
